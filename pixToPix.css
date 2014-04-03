@@ -115,7 +115,7 @@
 	display: table;
 	width: 100%;
 	height: 100%;
-	padding: 30px;
+    border-spacing: 30px;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -194,9 +194,17 @@
 	cursor: pointer;
 	left: 0;
 	top: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
 	width: 100%;
 	height: 100%;
-	visibility: hidden;
+
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+    opacity: 0;
 }
 
 #b-pp-drop__canvas {
@@ -207,7 +215,12 @@
 	width: 100%;
 	height: 100%;
 	background: #fff;
-	visibility: hidden;
+
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+    opacity: 0;
 }
 
 #b-pp-formFile {

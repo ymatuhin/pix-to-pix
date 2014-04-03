@@ -45,25 +45,6 @@ removeItem:function(b){a.load("localStorage");b=c(b);a.removeAttribute(b);a.save
 
 #Modernizr.filereader = false
 
-(->
-	ready = (fn) ->
-		if document.addEventListener
-			document.addEventListener "DOMContentLoaded", fn
-		else
-			document.attachEvent "onreadystatechange", ->
-				fn()  if document.readyState is "interactive"
-				return
-
-		return
-
-	ready(->
-		app.init()
-		)
-
-	window.onload = ->
-		app.init()
-)()
-
 app =
 	counter: 0
 	first: no
@@ -128,7 +109,7 @@ app =
 		link = document.createElement("link")
 		link.rel = "stylesheet"
 		link.type = "text/css"
-		link.href = "http//cdn.jsdelivr.net/pixtopix/0.1/pixtopix.css"
+		link.href = "http://cdn.jsdelivr.net/pixtopix/latest/pixtopix.css"
 		link.media = "all"
 		head.appendChild link;
 
@@ -262,6 +243,7 @@ loadFile =
 
 	layout:
 		generate: (type) ->
+#			debugger
 			inHtml = ''
 			type = type || 'text'
 
@@ -270,7 +252,7 @@ loadFile =
 			else if type is 'drop'
 				inHtml = '<p>Drag\'n\'drop image file</p><p>OR</p><span class="b-pp-drop__file-box b-pp__btn">BROWSE<input type="file" id="b-pp-drop__file"></span>'
 
-			html = '<div class="b-pp-drop__border"><canvas id="b-pp-drop__canvas"></canvas><div id="b-pp-drop__text-box" class="b-pp-drop__text-box">'+ inHtml + '</div></div>'
+			html = '<div class="b-pp-drop__border"><div id="b-pp-drop__text-box" class="b-pp-drop__text-box">'+ inHtml + '</div></div>'
 			html = html.replace(/\t/g, '');
 
 			controlLay = document.createElement('div')
@@ -287,7 +269,6 @@ loadFile =
 			loadFile.eForm = document.getElementById 'b-pp-formFile'
 			loadFile.eSubmit = document.getElementById 'b-pp-drop__submit'
 			loadFile.eTextSubmit = document.getElementById 'b-pp-drop__text'
-			loadFile.eCanvas = document.getElementById("b-pp-drop__canvas")
 
 			loadFile.eTextSubmit.focus() if type is 'text'
 
@@ -349,6 +330,8 @@ loadFile =
 		), false
 
 	dropLoad: ->
+		docEl = document.documentElement;
+
 		dragover = (evt) ->
 			root = document.getElementsByTagName("html")[0]
 			cCls.add(root, loadFile.dragClass)
@@ -357,11 +340,11 @@ loadFile =
 			return
 
 		# To enable drag and drop
-		document.documentElement.addEventListener "dragover", (dragover), false
-#		@eTextBox.addEventListener "dragover", (dragover), false
+		docEl.addEventListener "dragover", (dragover), false
 
 		# Handle dropped image file - only Firefox and Google Chrome
-		@eCanvas.addEventListener "drop", ((evt) ->
+		docEl.addEventListener "drop", ((evt) ->
+			console.log('drop')
 			root = document.getElementsByTagName("html")[0]
 			cCls.remove(root, loadFile.dragClass)
 
@@ -370,7 +353,8 @@ loadFile =
 			return
 		), false
 
-		@eCanvas.addEventListener "dragleave", ( ->
+		docEl.addEventListener "dragleave", ( ->
+			console.log('leave')
 			root = document.getElementsByTagName("html")[0]
 			cCls.remove(root, loadFile.dragClass)
 			return
@@ -795,23 +779,6 @@ controls =
 
 # additional
 
-addEventListener = (el, eventName, handler) ->
-	if el.addEventListener
-		el.addEventListener eventName, handler
-	else
-		el.attachEvent "on" + eventName, ->
-			handler.call el
-			return
-
-	return
-
-removeEventListener = (el, eventName, handler) ->
-	if el.removeEventListener
-		el.removeEventListener eventName, handler
-	else
-		el.detachEvent "on" + eventName, handler
-	return
-
 addEvent = (eventName, element, handler) ->
 	if element.addEventListener
 		element.addEventListener eventName, handler, false
@@ -941,3 +908,7 @@ draggable = (id, callabck) ->
 
 	document.getElementById(id).ondragstart = ->
 		false
+
+try app.init() catch e
+window.onload = ->
+	app.init()
